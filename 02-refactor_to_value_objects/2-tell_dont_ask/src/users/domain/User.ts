@@ -1,4 +1,4 @@
-import { UserBirthdate } from "./UserBirthdate";
+import { Generation, UserBirthdate } from "./UserBirthdate";
 import { UserEmail } from "./UserEmail";
 import { UserId } from "./UserId";
 
@@ -19,5 +19,9 @@ export class User {
 
 	updateEmail(newEmail: string): void {
 		this.email = new UserEmail(newEmail);
+	}
+
+	generation(): Generation {
+		return this.birthdate.generation();
 	}
 }
