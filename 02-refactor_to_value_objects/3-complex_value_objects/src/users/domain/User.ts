@@ -1,3 +1,4 @@
+import { JobExperience } from "./JobExperience";
 import { Generation, UserBirthdate } from "./UserBirthdate";
 import { UserEmail } from "./UserEmail";
 import { UserId } from "./UserId";
@@ -6,11 +7,31 @@ export class User {
 	private email: UserEmail;
 	private readonly id: UserId;
 	private readonly birthdate: UserBirthdate;
+	private readonly jobExperiences: JobExperience[];
 
-	constructor(id: string, email: string, birthdate: Date) {
+	constructor(
+		id: string,
+		email: string,
+		birthdate: Date,
+		jobExperiences: {
+			company: string;
+			title: string;
+			startDate: Date;
+			endDate: Date | null;
+		}[]
+	) {
 		this.id = new UserId(id);
 		this.email = new UserEmail(email);
 		this.birthdate = new UserBirthdate(birthdate);
+		this.jobExperiences = jobExperiences.map(
+			(jobExperience) =>
+				new JobExperience(
+					jobExperience.company,
+					jobExperience.title,
+					jobExperience.startDate,
+					jobExperience.endDate
+				)
+		);
 	}
 
 	get emailValue(): string {

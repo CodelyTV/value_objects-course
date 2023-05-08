@@ -13,6 +13,14 @@ const validBirthdate = new Date(
 	currentDate.getMonth(),
 	currentDate.getDate()
 );
+const validJobExperience = [
+	{
+		title: "Job title",
+		company: "Company",
+		startDate: new Date("2020-01-01"),
+		endDate: new Date("2022-01-01"),
+	},
+];
 
 describe("UserRegistrar", () => {
 	it("registers a user without throwing errors when all data is valid", () => {
@@ -21,13 +29,15 @@ describe("UserRegistrar", () => {
 
 		const oldEmail = "oldemail@gmail.com";
 		const newEmail = "newemail@gmail.com";
-		repository.save(new User(validId, oldEmail, validBirthdate));
+		repository.save(new User(validId, oldEmail, validBirthdate, validJobExperience));
 
 		const repositorySave = jest.spyOn(repository, "save");
 
 		userEmailUpdater.update(oldEmail, newEmail);
 
-		expect(repositorySave).toHaveBeenCalledWith(new User(validId, newEmail, validBirthdate));
+		expect(repositorySave).toHaveBeenCalledWith(
+			new User(validId, newEmail, validBirthdate, validJobExperience)
+		);
 	});
 
 	it("throws an error if the user does not exist", () => {
@@ -50,7 +60,7 @@ describe("UserRegistrar", () => {
 
 		const oldEmail = "oldemail@gmail.com";
 		const invalidNewEmail = "newemail@invalid.com";
-		repository.save(new User(validId, oldEmail, validBirthdate));
+		repository.save(new User(validId, oldEmail, validBirthdate, validJobExperience));
 		const repositorySave = jest.spyOn(repository, "save");
 
 		const updateEmail = () => userEmailUpdater.update(oldEmail, invalidNewEmail);

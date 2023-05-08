@@ -13,6 +13,14 @@ const validBirthdate = new Date(
 	currentDate.getMonth(),
 	currentDate.getDate()
 );
+const validJobExperience = [
+	{
+		title: "Job title",
+		company: "Company",
+		startDate: new Date("2020-01-01"),
+		endDate: new Date("2022-01-01"),
+	},
+];
 
 describe("UserRegistrar", () => {
 	it("registers a user without throwing errors when all data is valid", () => {
@@ -20,9 +28,11 @@ describe("UserRegistrar", () => {
 		const userRegistrar = new UserRegistrar(repository);
 		const repositorySave = jest.spyOn(repository, "save");
 
-		userRegistrar.register(validId, validEmail, validBirthdate);
+		userRegistrar.register(validId, validEmail, validBirthdate, validJobExperience);
 
-		expect(repositorySave).toHaveBeenCalledWith(new User(validId, validEmail, validBirthdate));
+		expect(repositorySave).toHaveBeenCalledWith(
+			new User(validId, validEmail, validBirthdate, validJobExperience)
+		);
 	});
 
 	it("throws an error when registering a user with an invalid uuid", () => {
@@ -32,7 +42,8 @@ describe("UserRegistrar", () => {
 
 		const invalidId = "patata";
 
-		const register = () => userRegistrar.register(invalidId, validEmail, validBirthdate);
+		const register = () =>
+			userRegistrar.register(invalidId, validEmail, validBirthdate, validJobExperience);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -45,7 +56,8 @@ describe("UserRegistrar", () => {
 
 		const invalidEmail = "invalidemail";
 
-		const register = () => userRegistrar.register(validId, invalidEmail, validBirthdate);
+		const register = () =>
+			userRegistrar.register(validId, invalidEmail, validBirthdate, validJobExperience);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -58,7 +70,8 @@ describe("UserRegistrar", () => {
 
 		const invalidEmailDomain = "mail@invaliddomain.com";
 
-		const register = () => userRegistrar.register(validId, invalidEmailDomain, validBirthdate);
+		const register = () =>
+			userRegistrar.register(validId, invalidEmailDomain, validBirthdate, validJobExperience);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -72,7 +85,8 @@ describe("UserRegistrar", () => {
 		const invalidBirthdate = new Date();
 		invalidBirthdate.setFullYear(invalidBirthdate.getFullYear() - 111);
 
-		const register = () => userRegistrar.register(validId, validEmail, invalidBirthdate);
+		const register = () =>
+			userRegistrar.register(validId, validEmail, invalidBirthdate, validJobExperience);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -94,7 +108,30 @@ describe("UserRegistrar", () => {
 			invalidBirthdate.setFullYear(invalidBirthdate.getFullYear() - 1);
 		}
 
-		const register = () => userRegistrar.register(validId, validEmail, invalidBirthdate);
+		const register = () =>
+			userRegistrar.register(validId, validEmail, invalidBirthdate, validJobExperience);
+
+		expect(register).toThrow(InvalidArgumentError);
+		expect(repositorySave).not.toHaveBeenCalled();
+	});
+
+	it("throws an error when registering a user with a job experience that has a startDate later than the current Date", () => {
+		const repository = new InMemoryUserRepository();
+		const userRegistrar = new UserRegistrar(repository);
+		const repositorySave = jest.spyOn(repository, "save");
+
+		const currentDate = new Date();
+		const invalidStartDate = new Date(currentDate.getFullYear() + 1, 0, 1);
+
+		const invalidJobExperience = [
+			{
+				...validJobExperience[0],
+				startDate: invalidStartDate,
+			},
+		];
+
+		const register = () =>
+			userRegistrar.register(validId, validEmail, validBirthdate, invalidJobExperience);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
