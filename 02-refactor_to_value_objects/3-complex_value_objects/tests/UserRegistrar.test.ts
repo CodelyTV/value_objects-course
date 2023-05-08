@@ -136,4 +136,28 @@ describe("UserRegistrar", () => {
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
 	});
+
+	it("throws an error when registering a user with a job experience with an end date that is earlier than the start date", () => {
+		const repository = new InMemoryUserRepository();
+		const userRegistrar = new UserRegistrar(repository);
+		const repositorySave = jest.spyOn(repository, "save");
+
+		const currentDate = new Date();
+		const startDate = new Date(currentDate.getFullYear() - 1, 0, 1);
+		const endDate = new Date(currentDate.getFullYear() - 2, 0, 1);
+
+		const invalidJobExperience = [
+			{
+				...validJobExperience[0],
+				startDate,
+				endDate,
+			},
+		];
+
+		const register = () =>
+			userRegistrar.register(validId, validEmail, validBirthdate, invalidJobExperience);
+
+		expect(register).toThrow(InvalidArgumentError);
+		expect(repositorySave).not.toHaveBeenCalled();
+	});
 });
