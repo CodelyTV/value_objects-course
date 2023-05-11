@@ -1,33 +1,24 @@
-import { v4 } from "uuid";
-
 import { InvalidArgumentError } from "../../../src/shared/domain/InvalidArgumentError";
 import { UserEmailUpdater } from "../../../src/users/application/UserEmailUpdater";
 import { User } from "../../../src/users/domain/User";
 import { UserDoesNotExistError } from "../../../src/users/domain/UserDoesNotExistError";
 import { InMemoryUserRepository } from "../../../src/users/infrastructure/InMemoryUserRepository";
-
-const validId = v4();
-const currentDate = new Date();
-const validBirthdate = new Date(
-	currentDate.getFullYear() - 50,
-	currentDate.getMonth(),
-	currentDate.getDate()
-);
+import { UserMother } from "../domain/UserMother";
 
 describe("UserRegistrar", () => {
 	it("registers a user without throwing errors when all data is valid", () => {
 		const repository = new InMemoryUserRepository();
 		const userEmailUpdater = new UserEmailUpdater(repository);
 
-		const oldEmail = "oldemail@gmail.com";
+		const user = UserMother.create();
 		const newEmail = "newemail@gmail.com";
-		repository.save(new User(validId, oldEmail, validBirthdate));
+		repository.save(user);
 
 		const repositorySave = jest.spyOn(repository, "save");
 
-		userEmailUpdater.update(oldEmail, newEmail);
+		userEmailUpdater.update(user.email, newEmail);
 
-		expect(repositorySave).toHaveBeenCalledWith(new User(validId, newEmail, validBirthdate));
+		expect(repositorySave).toHaveBeenCalledWith(new User(user.id, newEmail, user.birthdate));
 	});
 
 	it("throws an error if the user does not exist", () => {
@@ -35,10 +26,10 @@ describe("UserRegistrar", () => {
 		const userEmailUpdater = new UserEmailUpdater(repository);
 		const repositorySave = jest.spyOn(repository, "save");
 
-		const oldEmail = "oldemail@gmail.com";
+		const user = UserMother.create();
 		const newEmail = "newemail@gmail.com";
 
-		const updateEmail = () => userEmailUpdater.update(oldEmail, newEmail);
+		const updateEmail = () => userEmailUpdater.update(user.email, newEmail);
 
 		expect(updateEmail).toThrow(UserDoesNotExistError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -48,12 +39,12 @@ describe("UserRegistrar", () => {
 		const repository = new InMemoryUserRepository();
 		const userEmailUpdater = new UserEmailUpdater(repository);
 
-		const oldEmail = "oldemail@gmail.com";
+		const user = UserMother.create();
 		const invalidNewEmail = "newemail@invalid.com";
-		repository.save(new User(validId, oldEmail, validBirthdate));
+		repository.save(user);
 		const repositorySave = jest.spyOn(repository, "save");
 
-		const updateEmail = () => userEmailUpdater.update(oldEmail, invalidNewEmail);
+		const updateEmail = () => userEmailUpdater.update(user.email, invalidNewEmail);
 
 		expect(updateEmail).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();

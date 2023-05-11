@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/CodelyTV/typescript-basic-skeleton#readme",
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@swc/core": "^1.2.172",
     "@swc/jest": "^0.2.20",
     "@types/jest": "^27.4.1",
