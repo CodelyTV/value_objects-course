@@ -1,6 +1,7 @@
-import { faker } from "@faker-js/faker";
-
 import { User } from "../../../src/users/domain/User";
+import { UserBirthdateMother } from "./UserBirthdate";
+import { UserEmailMother } from "./UserEmail";
+import { UserIdMother } from "./UserId";
 
 interface UserParams {
 	id: string;
@@ -10,13 +11,10 @@ interface UserParams {
 
 export class UserMother {
 	static create(params?: Partial<UserParams>): User {
-		const domains = ["gmail.com", "hotmail.com"];
-		const randomDomain = domains[Math.floor(Math.random() * domains.length)];
-
 		const defaultParams: UserParams = {
-			id: faker.datatype.uuid(),
-			email: faker.internet.email(faker.name.firstName(), faker.name.lastName(), randomDomain),
-			birthdate: faker.date.birthdate({ mode: "age", min: 18, max: 110 }),
+			id: UserIdMother.create().value,
+			email: UserEmailMother.create().value,
+			birthdate: UserBirthdateMother.create().value,
 			...params,
 		};
 

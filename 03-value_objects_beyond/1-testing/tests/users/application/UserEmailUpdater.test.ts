@@ -3,6 +3,7 @@ import { UserEmailUpdater } from "../../../src/users/application/UserEmailUpdate
 import { User } from "../../../src/users/domain/User";
 import { UserDoesNotExistError } from "../../../src/users/domain/UserDoesNotExistError";
 import { InMemoryUserRepository } from "../../../src/users/infrastructure/InMemoryUserRepository";
+import { UserEmailMother } from "../domain/UserEmail";
 import { UserMother } from "../domain/UserMother";
 
 describe("UserRegistrar", () => {
@@ -11,14 +12,16 @@ describe("UserRegistrar", () => {
 		const userEmailUpdater = new UserEmailUpdater(repository);
 
 		const user = UserMother.create();
-		const newEmail = "newemail@gmail.com";
+		const newEmail = UserEmailMother.create();
 		repository.save(user);
 
 		const repositorySave = jest.spyOn(repository, "save");
 
-		userEmailUpdater.update(user.email, newEmail);
+		userEmailUpdater.update(user.emailValue, newEmail.value);
 
-		expect(repositorySave).toHaveBeenCalledWith(new User(user.id, newEmail, user.birthdate));
+		expect(repositorySave).toHaveBeenCalledWith(
+			new User(user.idValue, newEmail.value, user.birthdateValue)
+		);
 	});
 
 	it("throws an error if the user does not exist", () => {
@@ -27,9 +30,9 @@ describe("UserRegistrar", () => {
 		const repositorySave = jest.spyOn(repository, "save");
 
 		const user = UserMother.create();
-		const newEmail = "newemail@gmail.com";
+		const newEmail = UserEmailMother.create();
 
-		const updateEmail = () => userEmailUpdater.update(user.email, newEmail);
+		const updateEmail = () => userEmailUpdater.update(user.emailValue, newEmail.value);
 
 		expect(updateEmail).toThrow(UserDoesNotExistError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -44,7 +47,7 @@ describe("UserRegistrar", () => {
 		repository.save(user);
 		const repositorySave = jest.spyOn(repository, "save");
 
-		const updateEmail = () => userEmailUpdater.update(user.email, invalidNewEmail);
+		const updateEmail = () => userEmailUpdater.update(user.emailValue, invalidNewEmail);
 
 		expect(updateEmail).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
