@@ -11,9 +11,11 @@ describe("UserRegistrar", () => {
 		const repositorySave = jest.spyOn(repository, "save");
 
 		const user = UserMother.create();
-		userRegistrar.register(user.id, user.email, user.birthdate);
+		userRegistrar.register(user.idValue, user.emailValue, user.birthdateValue);
 
-		expect(repositorySave).toHaveBeenCalledWith(new User(user.id, user.email, user.birthdate));
+		expect(repositorySave).toHaveBeenCalledWith(
+			new User(user.idValue, user.emailValue, user.birthdateValue)
+		);
 	});
 
 	it("throws an error when registering a user with an invalid uuid", () => {
@@ -24,7 +26,7 @@ describe("UserRegistrar", () => {
 		const user = UserMother.create();
 		const invalidId = "patata";
 
-		const register = () => userRegistrar.register(invalidId, user.email, user.birthdate);
+		const register = () => userRegistrar.register(invalidId, user.emailValue, user.birthdateValue);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -38,7 +40,7 @@ describe("UserRegistrar", () => {
 		const user = UserMother.create();
 		const invalidEmail = "invalidemail";
 
-		const register = () => userRegistrar.register(user.id, invalidEmail, user.birthdate);
+		const register = () => userRegistrar.register(user.idValue, invalidEmail, user.birthdateValue);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -52,7 +54,8 @@ describe("UserRegistrar", () => {
 		const user = UserMother.create();
 		const invalidEmailDomain = "mail@invaliddomain.com";
 
-		const register = () => userRegistrar.register(user.id, invalidEmailDomain, user.birthdate);
+		const register = () =>
+			userRegistrar.register(user.idValue, invalidEmailDomain, user.birthdateValue);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -67,7 +70,7 @@ describe("UserRegistrar", () => {
 		const invalidBirthdate = new Date();
 		invalidBirthdate.setFullYear(invalidBirthdate.getFullYear() - 111);
 
-		const register = () => userRegistrar.register(user.id, user.email, invalidBirthdate);
+		const register = () => userRegistrar.register(user.idValue, user.emailValue, invalidBirthdate);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -90,7 +93,7 @@ describe("UserRegistrar", () => {
 			invalidBirthdate.setFullYear(invalidBirthdate.getFullYear() - 1);
 		}
 
-		const register = () => userRegistrar.register(user.id, user.email, invalidBirthdate);
+		const register = () => userRegistrar.register(user.idValue, user.emailValue, invalidBirthdate);
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
