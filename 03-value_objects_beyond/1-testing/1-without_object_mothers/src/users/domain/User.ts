@@ -9,13 +9,18 @@ export class User {
 		this.ensureBirthdateIsValid(birthdate);
 	}
 
-	ensureIdIsValid(id: string): void {
+	updateEmail(newEmail: string): void {
+		this.ensureEmailIsValid(newEmail);
+		this.email = newEmail;
+	}
+
+	private ensureIdIsValid(id: string): void {
 		if (!validate(id)) {
 			throw new InvalidArgumentError(`<${id}> is not a valid UUID`);
 		}
 	}
 
-	ensureEmailIsValid(email: string): void {
+	private ensureEmailIsValid(email: string): void {
 		const validEmailRegExp =
 			/^(?=.*[@](?:gmail\.com|hotmail\.com)$)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[a-zA-Z0-9_-]*$/;
 
@@ -24,7 +29,7 @@ export class User {
 		}
 	}
 
-	ensureBirthdateIsValid(birthdate: Date): void {
+	private ensureBirthdateIsValid(birthdate: Date): void {
 		const currentDate = new Date();
 		let ageInYears = currentDate.getFullYear() - birthdate.getFullYear();
 
@@ -39,10 +44,5 @@ export class User {
 		if (ageInYears < 18 || ageInYears > 110) {
 			throw new InvalidArgumentError(`<${birthdate.toISOString()}> is not a valid birthdate`);
 		}
-	}
-
-	updateEmail(newEmail: string): void {
-		this.ensureEmailIsValid(newEmail);
-		this.email = newEmail;
 	}
 }

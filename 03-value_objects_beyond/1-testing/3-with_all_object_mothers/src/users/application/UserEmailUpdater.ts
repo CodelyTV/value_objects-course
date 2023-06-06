@@ -13,6 +13,7 @@ export class UserEmailUpdater {
 		}
 
 		user.updateEmail(newEmail);
+
 		this.repository.save(user);
 	}
 }

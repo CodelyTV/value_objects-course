@@ -13,6 +13,10 @@ export class User {
 		this.birthdate = new UserBirthdate(birthdate);
 	}
 
+	updateEmail(newEmail: string): void {
+		this.email = new UserEmail(newEmail);
+	}
+
 	get idValue(): string {
 		return this.id.value;
 	}
@@ -23,9 +27,5 @@ export class User {
 
 	get birthdateValue(): Date {
 		return this.birthdate.value;
-	}
-
-	updateEmail(newEmail: string): void {
-		this.email = new UserEmail(newEmail);
 	}
 }
