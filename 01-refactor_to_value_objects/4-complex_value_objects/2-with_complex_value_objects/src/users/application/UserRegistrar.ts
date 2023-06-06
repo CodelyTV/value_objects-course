@@ -8,14 +8,14 @@ export class UserRegistrar {
 		id: string,
 		email: string,
 		birthdate: Date,
-		jobExperience: {
+		jobExperiences: {
 			company: string;
 			title: string;
 			startDate: Date;
 			endDate: Date | null;
 		}[]
 	): void {
-		const user = new User(id, email, birthdate, jobExperience);
+		const user = new User(id, email, birthdate, jobExperiences);
 
 		this.repository.save(user);
 	}

@@ -12,4 +12,12 @@ export class JobExperience {
 		this.title = new Title(title);
 		this.dateRange = new DateRange(startDate, endDate);
 	}
+
+	get startDate(): Date {
+		return this.dateRange.startDate.value;
+	}
+
+	get endDate(): Date | null {
+		return this.dateRange.endDate?.value ?? null;
+	}
 }

@@ -1,4 +1,4 @@
-import { JobExperience } from "./JobExperience";
+import { JobExperiences } from "./JobExperiences";
 import { Generation, UserBirthdate } from "./UserBirthdate";
 import { UserEmail } from "./UserEmail";
 import { UserId } from "./UserId";
@@ -7,7 +7,7 @@ export class User {
 	private email: UserEmail;
 	private readonly id: UserId;
 	private readonly birthdate: UserBirthdate;
-	private readonly jobExperiences: JobExperience[];
+	private readonly jobExperiences: JobExperiences;
 
 	constructor(
 		id: string,
@@ -23,15 +23,7 @@ export class User {
 		this.id = new UserId(id);
 		this.email = new UserEmail(email);
 		this.birthdate = new UserBirthdate(birthdate);
-		this.jobExperiences = jobExperiences.map(
-			(jobExperience) =>
-				new JobExperience(
-					jobExperience.company,
-					jobExperience.title,
-					jobExperience.startDate,
-					jobExperience.endDate
-				)
-		);
+		this.jobExperiences = new JobExperiences(jobExperiences);
 	}
 
 	get emailValue(): string {

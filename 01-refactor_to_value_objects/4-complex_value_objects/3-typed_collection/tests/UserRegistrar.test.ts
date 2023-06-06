@@ -160,4 +160,29 @@ describe("UserRegistrar", () => {
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
 	});
+
+	it("throws an error when two job experiences overlap", () => {
+		const repository = new InMemoryUserRepository();
+		const userRegistrar = new UserRegistrar(repository);
+
+		const invalidJobExperiences = [
+			{
+				title: "Job title",
+				company: "Company",
+				startDate: new Date("2020-01-01"),
+				endDate: new Date("2022-01-01"),
+			},
+			{
+				title: "Another Job title",
+				company: "Another Company",
+				startDate: new Date("2020-05-05"),
+				endDate: new Date("2022-01-01"),
+			},
+		];
+
+		const register = () =>
+			userRegistrar.register(validId, validEmail, validBirthdate, invalidJobExperiences);
+
+		expect(register).toThrow(InvalidArgumentError);
+	});
 });
