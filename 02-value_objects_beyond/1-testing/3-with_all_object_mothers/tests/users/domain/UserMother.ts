@@ -1,7 +1,7 @@
 import { User } from "../../../src/users/domain/User";
-import { UserBirthdateMother } from "./UserBirthdate";
-import { UserEmailMother } from "./UserEmail";
-import { UserIdMother } from "./UserId";
+import { UserBirthdateMother } from "./UserBirthdateMother";
+import { UserEmailMother } from "./UserEmailMother";
+import { UserIdMother } from "./UserIdMother";
 
 interface UserParams {
 	id: string;

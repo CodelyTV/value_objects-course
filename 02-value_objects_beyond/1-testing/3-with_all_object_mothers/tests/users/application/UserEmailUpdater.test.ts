@@ -3,7 +3,7 @@ import { UserEmailUpdater } from "../../../src/users/application/UserEmailUpdate
 import { User } from "../../../src/users/domain/User";
 import { UserDoesNotExistError } from "../../../src/users/domain/UserDoesNotExistError";
 import { InMemoryUserRepository } from "../../../src/users/infrastructure/InMemoryUserRepository";
-import { UserEmailMother } from "../domain/UserEmail";
+import { UserEmailMother } from "../domain/UserEmailMother";
 import { UserMother } from "../domain/UserMother";
 
 describe("UserRegistrar", () => {
