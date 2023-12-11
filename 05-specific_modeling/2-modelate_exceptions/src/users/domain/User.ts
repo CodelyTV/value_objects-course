@@ -9,7 +9,11 @@ export type UserPrimitives = {
 };
 
 export class User {
-	constructor(public id: string, public email: string, public birthdate: Date = new Date()) {}
+	constructor(
+		private readonly id: UserId,
+		private email: UserEmail,
+		private readonly birthdate: UserBirthdate | null
+	) {}
 
 	static create(id: string, email: string, birthdate: Date = new Date()): User {
 		return new User(new UserId(id), new UserEmail(email), new UserBirthdate(birthdate));
