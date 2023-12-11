@@ -3,7 +3,7 @@ import { UserEmail } from "../domain/UserEmail";
 import { UserRepository } from "../domain/UserRepository";
 
 export class InMemoryUserRepository implements UserRepository {
-	private readonly users: User[] = [];
+	constructor(private readonly users: User[]) {}
 
 	save(user: User): void {
 		this.users.push(user);

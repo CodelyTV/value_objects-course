@@ -1,5 +1,6 @@
 import { InvalidArgumentError } from "../../../src/shared/domain/InvalidArgumentError";
 import { UserRegistrar } from "../../../src/users/application/UserRegistrar";
+import { UserAlreadyExistError } from "../../../src/users/domain/UserAlreadyExistError";
 import { InMemoryUserRepository } from "../../../src/users/infrastructure/InMemoryUserRepository";
 import { UserMother } from "../domain/UserMother";
 
@@ -24,6 +25,19 @@ describe("UserRegistrar", () => {
 		userRegistrar.register(user.idValue, user.emailValue, user.birthdateValue);
 
 		expect(repositorySave).toHaveBeenCalledWith(user);
+	});
+
+	it("throws an error when registering an already existing user", () => {
+		const user = UserMother.create();
+		const repository = new InMemoryUserRepository([user]);
+
+		const userRegistrar = new UserRegistrar(repository);
+
+		const register = () =>
+			userRegistrar.register(user.idValue, user.emailValue, user.birthdateValue);
+
+		// expect(register).toThrow(UserAlreadyExistError);
+		expect(register).toThrow(new UserAlreadyExistError(user.emailValue));
 	});
 
 	it("throws an error when registering a user with an invalid uuid", () => {
