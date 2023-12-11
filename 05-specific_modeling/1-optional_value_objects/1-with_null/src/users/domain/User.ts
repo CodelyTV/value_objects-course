@@ -5,25 +5,29 @@ import { UserId } from "./UserId";
 export type UserPrimitives = {
 	id: string;
 	email: string;
-	birthdate: Date;
+	birthdate: Date | null;
 };
 
 export class User {
 	constructor(
 		private readonly id: UserId,
 		private email: UserEmail,
-		private readonly birthdate: UserBirthdate
+		private readonly birthdate: UserBirthdate | null
 	) {}
 
-	static create(id: string, email: string, birthdate: Date): User {
-		return new User(new UserId(id), new UserEmail(email), new UserBirthdate(birthdate));
+	static create(id: string, email: string, birthdate: Date | null): User {
+		return new User(
+			new UserId(id),
+			new UserEmail(email),
+			birthdate !== null ? new UserBirthdate(birthdate) : null
+		);
 	}
 
 	static fromPrimitives(primitives: UserPrimitives): User {
 		return new User(
 			new UserId(primitives.id),
 			new UserEmail(primitives.email),
-			new UserBirthdate(primitives.birthdate)
+			primitives.birthdate !== null ? new UserBirthdate(primitives.birthdate) : null
 		);
 	}
 
@@ -39,7 +43,7 @@ export class User {
 		return this.email.value;
 	}
 
-	get birthdateValue(): Date {
-		return this.birthdate.value;
+	get birthdateValue(): Date | null {
+		return this.birthdate !== null ? this.birthdate.value : null;
 	}
 }

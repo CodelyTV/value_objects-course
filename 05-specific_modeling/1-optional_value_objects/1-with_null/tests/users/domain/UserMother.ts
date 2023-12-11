@@ -14,4 +14,8 @@ export class UserMother {
 
 		return User.fromPrimitives(primitives);
 	}
+
+	static withoutBirthday(): User {
+		return this.create({ birthdate: null });
+	}
 }
