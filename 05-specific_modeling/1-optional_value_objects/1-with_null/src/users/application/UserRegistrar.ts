@@ -5,7 +5,7 @@ export class UserRegistrar {
 	constructor(private readonly repository: UserRepository) {}
 
 	register(id: string, email: string, birthdate: Date): void {
-		const user = new User(id, email, birthdate);
+		const user = User.create(id, email, birthdate);
 
 		this.repository.save(user);
 	}

@@ -1,6 +1,5 @@
 import { InvalidArgumentError } from "../../../src/shared/domain/InvalidArgumentError";
 import { UserRegistrar } from "../../../src/users/application/UserRegistrar";
-import { User } from "../../../src/users/domain/User";
 import { InMemoryUserRepository } from "../../../src/users/infrastructure/InMemoryUserRepository";
 import { UserMother } from "../domain/UserMother";
 
@@ -13,9 +12,7 @@ describe("UserRegistrar", () => {
 		const user = UserMother.create();
 		userRegistrar.register(user.idValue, user.emailValue, user.birthdateValue);
 
-		expect(repositorySave).toHaveBeenCalledWith(
-			new User(user.idValue, user.emailValue, user.birthdateValue)
-		);
+		expect(repositorySave).toHaveBeenCalledWith(user);
 	});
 
 	it("throws an error when registering a user with an invalid uuid", () => {

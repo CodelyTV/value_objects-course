@@ -2,15 +2,29 @@ import { UserBirthdate } from "./UserBirthdate";
 import { UserEmail } from "./UserEmail";
 import { UserId } from "./UserId";
 
-export class User {
-	private email: UserEmail;
-	private readonly id: UserId;
-	private readonly birthdate: UserBirthdate;
+export type UserPrimitives = {
+	id: string;
+	email: string;
+	birthdate: Date;
+};
 
-	constructor(id: string, email: string, birthdate: Date) {
-		this.id = new UserId(id);
-		this.email = new UserEmail(email);
-		this.birthdate = new UserBirthdate(birthdate);
+export class User {
+	constructor(
+		private readonly id: UserId,
+		private email: UserEmail,
+		private readonly birthdate: UserBirthdate
+	) {}
+
+	static create(id: string, email: string, birthdate: Date): User {
+		return new User(new UserId(id), new UserEmail(email), new UserBirthdate(birthdate));
+	}
+
+	static fromPrimitives(primitives: UserPrimitives): User {
+		return new User(
+			new UserId(primitives.id),
+			new UserEmail(primitives.email),
+			new UserBirthdate(primitives.birthdate)
+		);
 	}
 
 	updateEmail(newEmail: string): void {
