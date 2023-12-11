@@ -1,3 +1,4 @@
+import { Maybe } from "../../../src/shared/domain/Maybe";
 import { User, UserPrimitives } from "../../../src/users/domain/User";
 import { UserBirthdateMother } from "./UserBirthdateMother";
 import { UserEmailMother } from "./UserEmailMother";
@@ -8,7 +9,7 @@ export class UserMother {
 		const primitives: UserPrimitives = {
 			id: UserIdMother.create().value,
 			email: UserEmailMother.create().value,
-			birthdate: UserBirthdateMother.create().value,
+			birthdate: Maybe.some(UserBirthdateMother.create().value),
 			...params,
 		};
 
@@ -16,6 +17,6 @@ export class UserMother {
 	}
 
 	static withoutBirthday(): User {
-		return this.create({ birthdate: null });
+		return this.create({ birthdate: Maybe.none() });
 	}
 }

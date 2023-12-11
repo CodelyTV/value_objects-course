@@ -1,4 +1,5 @@
 import { InvalidArgumentError } from "../../../src/shared/domain/InvalidArgumentError";
+import { Maybe } from "../../../src/shared/domain/Maybe";
 import { UserRegistrar } from "../../../src/users/application/UserRegistrar";
 import { InMemoryUserRepository } from "../../../src/users/infrastructure/InMemoryUserRepository";
 import { UserMother } from "../domain/UserMother";
@@ -78,7 +79,8 @@ describe("UserRegistrar", () => {
 		const invalidBirthdate = new Date();
 		invalidBirthdate.setFullYear(invalidBirthdate.getFullYear() - 111);
 
-		const register = () => userRegistrar.register(user.idValue, user.emailValue, invalidBirthdate);
+		const register = () =>
+			userRegistrar.register(user.idValue, user.emailValue, Maybe.some(invalidBirthdate));
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
@@ -101,7 +103,8 @@ describe("UserRegistrar", () => {
 			invalidBirthdate.setFullYear(invalidBirthdate.getFullYear() - 1);
 		}
 
-		const register = () => userRegistrar.register(user.idValue, user.emailValue, invalidBirthdate);
+		const register = () =>
+			userRegistrar.register(user.idValue, user.emailValue, Maybe.some(invalidBirthdate));
 
 		expect(register).toThrow(InvalidArgumentError);
 		expect(repositorySave).not.toHaveBeenCalled();
