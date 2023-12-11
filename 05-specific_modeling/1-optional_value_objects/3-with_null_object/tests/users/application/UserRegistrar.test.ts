@@ -21,7 +21,7 @@ describe("UserRegistrar", () => {
 		const repositorySave = jest.spyOn(repository, "save");
 
 		const user = UserMother.withoutBirthday();
-		userRegistrar.register(user.idValue, user.emailValue, user.birthdateValue);
+		userRegistrar.register(user.idValue, user.emailValue, null);
 
 		expect(repositorySave).toHaveBeenCalledWith(user);
 	});

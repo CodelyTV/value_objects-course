@@ -1,3 +1,5 @@
+import { NullUserBirthdate } from "./NullUserBirthdate";
+import { RealUserBirthdate } from "./RealUserBirthdate";
 import { UserBirthdate } from "./UserBirthdate";
 import { UserEmail } from "./UserEmail";
 import { UserId } from "./UserId";
@@ -12,14 +14,14 @@ export class User {
 	constructor(
 		private readonly id: UserId,
 		private email: UserEmail,
-		private readonly birthdate: UserBirthdate | null
+		private readonly birthdate: UserBirthdate
 	) {}
 
 	static create(id: string, email: string, birthdate: Date | null): User {
 		return new User(
 			new UserId(id),
 			new UserEmail(email),
-			birthdate !== null ? new UserBirthdate(birthdate) : null
+			birthdate !== null ? new RealUserBirthdate(birthdate) : new NullUserBirthdate()
 		);
 	}
 
@@ -27,7 +29,9 @@ export class User {
 		return new User(
 			new UserId(primitives.id),
 			new UserEmail(primitives.email),
-			primitives.birthdate !== null ? new UserBirthdate(primitives.birthdate) : null
+			primitives.birthdate !== null
+				? new RealUserBirthdate(primitives.birthdate)
+				: new NullUserBirthdate()
 		);
 	}
 
@@ -43,7 +47,7 @@ export class User {
 		return this.email.value;
 	}
 
-	get birthdateValue(): Date | null {
-		return this.birthdate !== null ? this.birthdate.value : null;
+	get birthdateValue(): Date {
+		return this.birthdate.toPrimitives();
 	}
 }
