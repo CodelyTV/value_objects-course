@@ -15,8 +15,12 @@ export class User {
 		private readonly birthdate: UserBirthdate | null
 	) {}
 
-	static create(id: string, email: string, birthdate: Date = new Date()): User {
-		return new User(new UserId(id), new UserEmail(email), new UserBirthdate(birthdate));
+	static create(id: string, email: string, birthdate: Date | null): User {
+		return new User(
+			new UserId(id),
+			new UserEmail(email),
+			birthdate !== null ? new UserBirthdate(birthdate) : null
+		);
 	}
 
 	static fromPrimitives(primitives: UserPrimitives): User {
